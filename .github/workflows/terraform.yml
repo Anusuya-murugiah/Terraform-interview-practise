@@ -48,7 +48,7 @@ jobs:
       fail-fast: false 
     
     steps:
-      - uses: actions/checkout$v4 
+      - uses: actions/checkout@v4 
 
       - uses: hashicorp/setup-terraform@v4 
         with:
@@ -107,6 +107,4 @@ jobs:
           cd "$TF_DIR"
           terraform init -no-color
           terraform apply -no-color -auto-approve
-      
 
-      
