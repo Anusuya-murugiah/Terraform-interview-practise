@@ -6,6 +6,10 @@ on:
   push:
     branches: [main]
 
+permissions:
+  id-token: write
+  contents: read 
+  
 jobs:
   detect:
     runs-on: ubuntu-latest
@@ -27,14 +31,14 @@ jobs:
             BASE="HEAD~1"
           fi
 
-          DIRS=$(bash scripts/detect-changed-dirs.sh "$BASE")
+          DIRS=$(bash scripts/detect-changed-dirs.sh "$BASE" || true )
 
           if [ -z "$DIRS" ]; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "directories=[]" >> $GITHUB_OUTPUT
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            JSON=$(echo "$DIRS" | jq -R -s 'split("\n") | map(select(length > 0))')
+            JSON=$(echo "$DIRS" | jq -R -s -c 'split("\n") | map(select(length > 0))') 
             echo "directories=$JSON" >> $GITHUB_OUTPUT
           fi
   
@@ -85,7 +89,7 @@ jobs:
     strategy:
       matrix: 
         directory: ${{fromJson(needs.detect.outputs.directories) }}
-        max-parallel: 1
+      max-parallel: 1
 
     steps:
       - uses: actions/checkout@v4 
