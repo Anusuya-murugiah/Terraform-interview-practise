@@ -71,11 +71,11 @@ jobs:
           terraform show -no-color tfplan > plan-output.tf 
 
       - name: upload plan 
-        uses: actions/upload-artifacts@v4 
+        uses: actions/upload-artifact@v4 
         with: 
           name: plan-${{ strategy.job-index }}
-          path:  |
-            ${{ matric.directory }}/tf-plan 
+          path: |
+            ${{ matrix.directory }}/tf-plan 
             ${{ matrix.directory }}/plan-output.txt 
         
   apply:
