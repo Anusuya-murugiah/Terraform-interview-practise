@@ -20,7 +20,7 @@ jobs:
 
       - name: find changed directories 
         id: changes 
-        run |
+        run:  |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE="origin/${{ github.base_ref }}"
           else
@@ -57,7 +57,7 @@ jobs:
          
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: 
+          role-to-assume: arn:aws:iam::931324892700:role/github-oidc-access
           aws-region: us-east-1 
  
 
@@ -97,7 +97,7 @@ jobs:
          
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: 
+          role-to-assume: arn:aws:iam::931324892700:role/github-oidc-access
           aws-region: us-east-1 
       
       - name: Terraform Apply - ${{ matrix.directory }}
