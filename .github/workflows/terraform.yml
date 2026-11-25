@@ -79,7 +79,7 @@ jobs:
         with: 
           name: plan-${{ strategy.job-index }}
           path: |
-            ${{ matrix.directory }}/tf-plan 
+            ${{ matrix.directory }}/tfplan 
             ${{ matrix.directory }}/plan-output.txt 
         
   apply:
