@@ -8,7 +8,8 @@ module "ec2_instance" {
   monitoring = true
   ami = var.ami_id
   
-  tags = {
-    Terraform = "true"
-  }
+  tags = merge (
+    {Terraform = "true"}, 
+    var.tags 
+    )
 }
