@@ -1,9 +1,11 @@
-varaible ami_id {
+varible ami_id {
     type = string
 }
 
-varaiable instance_type {
+variable instance_type {
     type = string 
 }
 
-variable 
+variable tags {
+    type = string 
+}
