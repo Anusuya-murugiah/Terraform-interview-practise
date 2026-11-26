@@ -7,8 +7,10 @@ module "ec2_instance" {
   key_name = "us-openclaw"
   monitoring = true
   ami = var.ami_id
+  subnet_id = "subnet-0e51e7526c14a6535"
   
-  tags = {
-    Terraform = "true"
-  }
+  tags = merge (
+    {Terraform = "true"}, 
+    var.tags 
+    )
 }
