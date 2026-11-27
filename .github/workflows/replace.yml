@@ -1,0 +1,39 @@
+name: Terraform monrepo CI/CD
+
+on:
+  pull_request: 
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read 
+  
+jobs:
+  
+  import:
+    runs-on: ubuntu-latest 
+  
+    steps:
+      - uses: actions/checkout@v4 
+
+      - uses: hashicorp/setup-terraform@v4 
+        with:
+          terraform_version: 1.17.2
+          terraform_wrapper: false 
+         
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::931324892700:role/github-oidc-access
+          aws-region: us-east-1 
+ 
+
+      - name: terraform plan - ${{ matrix.directory }}
+        env:
+          TF_DIR: ${{ matrix.directory }}
+        run: |
+          cd "env/dev" 
+          terraform init -no-color 
+          terraform plan -replace=aws_s3_bucket.demo 
+
