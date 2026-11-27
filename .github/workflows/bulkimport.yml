@@ -36,4 +36,12 @@ jobs:
           cd "env/dev" 
           terraform init -no-color 
           terraform query -generate-config-out=generated.tf
+
+      - run: ls -la && cat generated.tf
+        working-directory: env/dev
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated-config
+          path: env/dev/generated.tf
  
