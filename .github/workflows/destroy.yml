@@ -11,6 +11,10 @@ on:
         options:
           - dev
           - prod
+
+permissions:
+  contents: read
+  id-token: write
   
 jobs:
   plan-destroy:
