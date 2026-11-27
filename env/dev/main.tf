@@ -6,9 +6,9 @@ module "ec2" {
 
 import {
   to = aws_s3_bucket.demo
-  id = ecommerce-frontend-oct
+  id = "ecommerce-frontend-oct"
 }
 
 resource "aws_s3_bucket" demo {
-  name = ecommerce-frontend-oct
+  bucket = ecommerce-frontend-oct
 }
