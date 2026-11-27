@@ -10,5 +10,5 @@ import {
 }
 
 resource "aws_s3_bucket" demo {
-  bucket = ecommerce-frontend-oct
+  bucket = "ecommerce-frontend-oct"
 }
