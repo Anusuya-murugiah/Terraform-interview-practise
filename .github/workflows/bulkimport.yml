@@ -33,7 +33,7 @@ jobs:
         env:
           TF_DIR: ${{ matrix.directory }}
         run: |
-          cd "$TF_DIR" 
+          cd "env/dev 
           terraform init -no-color 
           terraform query -generate-config-out=generated.tf
  
