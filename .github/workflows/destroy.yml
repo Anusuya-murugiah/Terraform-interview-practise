@@ -48,6 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan-destroy
+          path: env/${{ inputs.environment }}/tfplan-destroy 
       
       - name: Terraform show
         run: terraform show -no-color tfplan-destroy > plan-output-destroy.txt
@@ -81,6 +82,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan-destroy
+          path: env/${{ inputs.environment }}
+          
       
       - name: terraform apply 
         run: terraform apply tfplan-destroy 
