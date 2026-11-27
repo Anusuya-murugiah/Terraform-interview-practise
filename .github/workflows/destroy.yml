@@ -1,0 +1,84 @@
+name: Terraform destroy
+
+on:
+ workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
+  
+jobs:
+  plan-destroy:
+    name: destroy plan
+    runs-on: ubuntu-latest 
+    defaults:
+      run:
+        working-directory: env/${{ inputs.environment}}
+    steps:
+      - name: checkout 
+        uses: actions/checkout@v3 
+      
+      - name: terraform setup
+        uses: hashicorp/setup-terraform@v4 
+        with:
+          terraform_version: 1.17.2 
+      
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2 
+        with:
+          role-to-assume: arn:aws:iam::931324892700:role/github-oidc-access
+          aws-region: us-east-1
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform plan 
+        run: terraform plan destroy -out=tfplan-destroy
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-destroy
+      
+      - name: Terraform show
+        run: terraform show -no-color tfplan-destroy > plan-output-destroy.txt
+
+  apply-destroy:
+    name: destroy apply
+    needs: plan-destroy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: env/${{ inputs.environment }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+     
+      - name: aws credenetials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::931324892700:role/github-oidc-access
+          aws-region: us-east-1
+      
+      - name: terraform setup
+        uses: hashicorp/setup-terraform@v4 
+        with:
+          terraform_version: 1.17.2 
+
+      - name: terraform init
+        run: terraform init
+
+      - name: download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-destroy
+      
+      - name: terraform apply 
+        run: terraform apply tfplan-destroy 
+
+
