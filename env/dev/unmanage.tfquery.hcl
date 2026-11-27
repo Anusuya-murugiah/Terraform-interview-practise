@@ -1,7 +1,7 @@
 list "aws_s3_buckket" "prod" {
   provider = aws 
   limit = 10
-  config = {
+  config {
     region = us-east-1
   } 
 }
