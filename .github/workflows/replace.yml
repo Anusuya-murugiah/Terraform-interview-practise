@@ -1,4 +1,4 @@
-name: Terraform monrepo CI/CD
+name: Replace
 
 on:
   pull_request: 
@@ -35,5 +35,17 @@ jobs:
         run: |
           cd "env/dev" 
           terraform init -no-color 
-          terraform plan -replace=aws_s3_bucket.demo 
+          terraform plan -replace=aws_s3_bucket.demo -out=replace-tfplan -no-color
 
+      - name: terraform upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: replace-tfplan
+          path: env/dev/replace-tfplan
+
+      - name : terraform apply 
+        run: |
+          cd "env/dev"
+          terraform apply -no-color replace-tfplan
+          
+          
