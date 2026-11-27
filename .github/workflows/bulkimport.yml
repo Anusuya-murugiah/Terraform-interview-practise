@@ -42,7 +42,7 @@ jobs:
             echo "directories=$JSON" >> $GITHUB_OUTPUT
           fi
 
-plan:
+  plan:
     needs: detect 
     if: needs.detect.outputs.has_changes == 'true'
     runs-on: ubuntu-latest 
