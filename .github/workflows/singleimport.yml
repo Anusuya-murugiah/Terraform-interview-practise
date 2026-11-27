@@ -1,0 +1,48 @@
+name: terraform import
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment: 
+        description: 'environment for import'
+        required: true 
+        default: 'dev'
+        type: choice 
+        options:
+          - dev
+          - prod 
+
+permissions:
+  contents: read
+  id-token: write 
+
+jobs:
+  plan-import:
+    name: plan import 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: env/${{ inputs.environment }}
+  
+    steps: 
+      - name: checkout
+        uses: actions/checkout@v3 
+      
+      - name: terraform setup
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.17.2 
+
+      - name: AWS Credentials
+        uses: aws-credentials/configure-aws-credentials@v4 
+        with:
+          role-to-assume: arn:aws:iam::931324892700:role/github-oidc-access
+          aws-region: us-east-1
+
+      - name: terraform init
+        run: terraform init 
+
+      - name: terraform plan 
+        run: terraform plan -out=tfplan -input=false
+
+
